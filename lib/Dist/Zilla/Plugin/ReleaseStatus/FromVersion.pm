@@ -7,6 +7,82 @@ package Dist::Zilla::Plugin::ReleaseStatus::FromVersion;
 
 our $VERSION = '0.001';
 
+use Moose;
+use Moose::Util::TypeConstraints qw/enum/;
+use version;
+
+use constant {
+    STABLE   => 'stable',
+    TESTING  => 'testing',
+    UNSTABLE => 'unstable',
+};
+
+my %RULES = (
+    none               => sub { 0 },
+    second_decimal_odd => _odd_digit_checker(2),
+    third_decimal_odd  => _odd_digit_checker(3),
+    fourth_decimal_odd => _odd_digit_checker(4),
+    fifth_decimal_odd  => _odd_digit_checker(5),
+    sixth_decimal_odd  => _odd_digit_checker(6),
+);
+
+enum VersionMode => [ keys %RULES ];
+
+has testing => (
+    is      => 'ro',
+    isa     => 'VersionMode',
+    default => 'none',
+);
+
+has unstable => (
+    is      => 'ro',
+    isa     => 'VersionMode',
+    default => 'none',
+);
+
+sub BUILD {
+    my ($self) = @_;
+    for my $type ( TESTING, UNSTABLE ) {
+        my $rule = $self->$type;
+        $self->logger->log_fatal("Unknown rule for '$type': $rule")
+          unless $RULES{$rule};
+    }
+}
+
+sub provide_release_status {
+    my $self    = shift;
+    my $version = version->new( $self->zilla->version );
+    my ( $urule, $trule );
+    if ( $urule = $RULES{ $self->unstable } and $urule->($version) ) {
+        return UNSTABLE;
+    }
+    if ( $trule = $RULES{ $self->testing } and $trule->($version) ) {
+        return TESTING;
+    }
+    else {
+        return STABLE;
+    }
+}
+
+#--------------------------------------------------------------------------#
+# utility functions
+#--------------------------------------------------------------------------#
+
+sub _odd_digit_checker {
+    my $pos = shift;
+    return sub {
+        my $version = shift;
+        return if $version->is_qv;
+        my ($fraction) = $version =~ m{\.(\d+)\z};
+        return unless defined($fraction) && length($fraction) >= $pos;
+        return substr( $fraction, $pos - 1, 1 ) % 2;
+    };
+}
+
+with 'Dist::Zilla::Role::ReleaseStatusProvider';
+
+__PACKAGE__->meta->make_immutable;
+
 1;
 
 =for Pod::Coverage BUILD
