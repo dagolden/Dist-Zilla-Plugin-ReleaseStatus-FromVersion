@@ -24,6 +24,9 @@ my %RULES = (
     fourth_decimal_odd => _odd_digit_checker(4),
     fifth_decimal_odd  => _odd_digit_checker(5),
     sixth_decimal_odd  => _odd_digit_checker(6),
+    second_tuple_odd   => _odd_tuple_checker(2),
+    third_tuple_odd    => _odd_tuple_checker(3),
+    fourth_tuple_odd   => _odd_tuple_checker(4),
 );
 
 enum VersionMode => [ keys %RULES ];
@@ -76,6 +79,18 @@ sub _odd_digit_checker {
         my ($fraction) = $version =~ m{\.(\d+)\z};
         return unless defined($fraction) && length($fraction) >= $pos;
         return substr( $fraction, $pos - 1, 1 ) % 2;
+    };
+}
+
+sub _odd_tuple_checker {
+    my $pos = shift;
+    return sub {
+        my $version = shift;
+        return unless $version->is_qv;
+        my $string = $version->normal;
+        $string =~ s/^v//;
+        my @tuples = split /\./, $string;
+        return ( defined( $tuples[ $pos - 1 ] ) ? ( $tuples[ $pos - 1 ] % 2 ) : 0 );
     };
 }
 

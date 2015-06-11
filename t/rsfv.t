@@ -37,6 +37,43 @@ my @cases = (
         mode => [ U, "sixth_decimal_odd" ],
         tests => [ [ '123.000001' => U ], [ '12.000002' => S ], [ '1.000003' => U ], ],
     },
+    {
+        mode  => [ T, "second_tuple_odd" ],
+        tests => [
+            [ 'v1.1.0'    => T ],
+            [ 'v1.2.20'   => S ],
+            [ 'v1.2.23'   => S ],
+            [ 'v23.33.20' => T ],
+        ],
+    },
+    {
+        mode  => [ U, "third_tuple_odd" ],
+        tests => [
+            [ 'v1.1.0'    => S ],
+            [ 'v1.2.21'   => U ],
+            [ 'v1.2.23'   => U ],
+            [ 'v23.33.20' => S ],
+        ],
+    },
+    {
+        mode  => [ U, "fourth_tuple_odd" ],
+        tests => [
+            [ 'v1.0.1.0'    => S ],
+            [ 'v1.0.2.21'   => U ],
+            [ 'v1.0.2.23'   => U ],
+            [ 'v23.0.33.20' => S ],
+        ],
+    },
+    {
+        mode  => [ U, "second_tuple_odd", T, "third_tuple_odd" ],
+        tests => [
+            [ 'v1.0.0' => S ],
+            [ 'v1.1.0' => U ],
+            [ 'v1.1.1' => U ],
+            [ 'v1.2.0' => S ],
+            [ 'v1.2.1' => T ],
+        ],
+    },
 );
 
 for my $c (@cases) {
