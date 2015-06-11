@@ -55,16 +55,10 @@ sub BUILD {
 sub provide_release_status {
     my $self    = shift;
     my $version = version->new( $self->zilla->version );
-    my ( $urule, $trule );
-    if ( $urule = $RULES{ $self->unstable } and $urule->($version) ) {
-        return UNSTABLE;
-    }
-    if ( $trule = $RULES{ $self->testing } and $trule->($version) ) {
-        return TESTING;
-    }
-    else {
-        return STABLE;
-    }
+    return
+        $RULES{ $self->unstable }->($version) ? UNSTABLE
+      : $RULES{ $self->testing }->($version)  ? TESTING
+      :                                         STABLE;
 }
 
 #--------------------------------------------------------------------------#
