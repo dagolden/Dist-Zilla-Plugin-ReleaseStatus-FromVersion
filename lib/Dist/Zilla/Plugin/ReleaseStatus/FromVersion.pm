@@ -31,11 +31,29 @@ my %RULES = (
 
 enum VersionMode => [ keys %RULES ];
 
+=attr testing
+
+Rule for setting status to 'testing'.  Must be one of the L</Status Rules>.
+
+The default is C<none>.
+
+=cut
+
 has testing => (
     is      => 'ro',
     isa     => 'VersionMode',
     default => 'none',
 );
+
+=attr unstable
+
+Rule for setting status to 'unstable'.  Must be one of the L</Status rules>.
+
+This setting takes precedence over C<testing>.
+
+The default is C<none>.
+
+=cut
 
 has unstable => (
     is      => 'ro',
@@ -98,21 +116,102 @@ __PACKAGE__->meta->make_immutable;
 
 =head1 SYNOPSIS
 
-    use Dist::Zilla::Plugin::ReleaseStatus::FromVersion;
+    # in dist.ini
+    [ReleaseStatus::FromVersion]
+    testing = third_decimal_odd
 
 =head1 DESCRIPTION
 
-This module might be cool, but you'd never know it from the lack
-of documentation.
+This module tells L<Dist::Zilla> to set distribution's release
+status based on its version number.
+
+There are two attributes C<testing> and C<unstable>.  Each is assigned a
+string corresponding to a test to apply to the distribution's version.
+(See L</Status rules>)
+
+If the C<unstable> rule is true, the status will be 'unstable'.
+Otherwise, if the C<testing> rule is true, the status will
+be 'testing'.  Otherwise, the status will be 'stable'.
 
 =head1 USAGE
 
-Good luck!
+Add C<[ReleaseStatus::FromVersion]> to your dist.ini and set the
+C<testing> and/or C<unstable> attributes.  Keep in mind that
+C<unstable> has the highest precedence.
 
-=head1 SEE ALSO
+=head2 Status rules
 
-=for :list
-* Maybe other modules do related things.
+=head3 Default rule
+
+The default rule 'none' is always false.
+
+=head3 Decimal version rules
+
+This set of rules apply only to "decimal versions" — versions that
+that look like integers or floating point numbers.  They will be
+false if applied to a version tuple.
+
+The only decimal rules so far check a particular digit after the decimal
+point and return true if the digit is odd:
+
+    second_decimal_odd
+    third_decimal_odd
+    fourth_decimal_odd
+    fifth_decimal_odd
+    sixth_decimal_odd
+
+For example, here is the 'fourth_decimal_odd' rule applied to two
+version numbers:
+
+    1.0100 — false
+    1.0101 — true
+
+=head3 Tuple version rules
+
+This set of rules apply only to "tuple versions", aka "dotted-decimal
+versions" — versions that that look like "v1", "v1.2", "v1.2.3" and so on.
+They also apply to versions without the leading-v as long as there are more
+than two decimal points, e.g. "1.2.3".  They will be false if applied to a
+decimal version.
+
+Tuple versions treat each decimal-separated value as an individual number.
+
+The only tuple rules so far check a particular tuple and return true if the
+tuple is odd:
+
+    second_tuple_odd
+    third_tuple_odd
+    fourth_tuple_odd
+
+For example, here is the 'second_tuple_odd' rule applied to two
+version numbers:
+
+    v1.0.3 — false
+    v1.1.3 — true
+
+=head3 New rules
+
+If you have an idea for a new rule, please look at how the existing rules
+are implemented and open a Github issue or send a pull-request with your
+idea.
+
+=head1 EXAMPLE
+
+Here is a somewhat contrived example demonstrating precedence:
+
+    [ReleaseStatus::FromVersion]
+
+    unstable = second_decimal_odd
+    testing  = fourth_decimal_odd
+
+    # results for different possible version
+
+    1.0000 — stable
+    1.0100 — unstable
+    1.0101 — unstable
+    1.0200 — stable
+    1.0201 — testing
+    1.0202 — stable
 
 =cut
 
