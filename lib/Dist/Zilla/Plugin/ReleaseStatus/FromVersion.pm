@@ -73,6 +73,10 @@ sub BUILD {
 sub provide_release_status {
     my $self    = shift;
     my $version = version->new( $self->zilla->version );
+
+    $self->logger->log_fatal("Versions with underscore ('$version') are not supported")
+      if $version =~ /_/;
+
     return
         $RULES{ $self->unstable }->($version) ? UNSTABLE
       : $RULES{ $self->testing }->($version)  ? TESTING
@@ -132,6 +136,10 @@ string corresponding to a rule to apply to the distribution's version.
 If the C<unstable> rule is true, the status will be 'unstable'.  Otherwise,
 if the C<testing> rule is true, the status will be 'testing'.  Otherwise,
 the status will be 'stable'.
+
+B<NOTE>: Version numbers with underscores, whether decimal or tuple, will
+cause of fatal error.  This module B<replaces> underscore heuristics to
+determine release status and is thus incompatible with such versions.
 
 =head1 USAGE
 

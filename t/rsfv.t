@@ -111,5 +111,31 @@ for my $c (@cases) {
     };
 }
 
+subtest "underscore is fatal" => sub {
+    for my $case ( [ "1.23_45", "second_decimal_odd" ],
+        [ "v1.2.3_4", "second_element_odd" ] )
+    {
+        my ( $version, $mode ) = @$case;
+        my $tzil = Builder->from_config(
+            { dist_root => 'corpus/DZ' },
+            {
+                add_files => {
+                    'source/dist.ini' => simple_ini(
+                        { version => $version }, 'GatherDir',
+                        'MetaJSON', [ 'ReleaseStatus::FromVersion' => { testing => $mode } ]
+                    ),
+                },
+            },
+        );
+
+        eval { $tzil->build };
+        like(
+            $@,
+            qr/Versions with underscore.*are not supported/i,
+            "$version: underscore is fatal"
+        );
+    }
+};
+
 done_testing;
 # COPYRIGHT
