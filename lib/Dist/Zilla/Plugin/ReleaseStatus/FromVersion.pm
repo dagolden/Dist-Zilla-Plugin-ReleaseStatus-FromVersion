@@ -24,9 +24,9 @@ my %RULES = (
     fourth_decimal_odd => _odd_digit_checker(4),
     fifth_decimal_odd  => _odd_digit_checker(5),
     sixth_decimal_odd  => _odd_digit_checker(6),
-    second_tuple_odd   => _odd_tuple_checker(2),
-    third_tuple_odd    => _odd_tuple_checker(3),
-    fourth_tuple_odd   => _odd_tuple_checker(4),
+    second_element_odd => _odd_tuple_checker(2),
+    third_element_odd  => _odd_tuple_checker(3),
+    fourth_element_odd => _odd_tuple_checker(4),
 );
 
 enum VersionMode => [ keys %RULES ];
@@ -122,16 +122,16 @@ __PACKAGE__->meta->make_immutable;
 
 =head1 DESCRIPTION
 
-This module tells L<Dist::Zilla> to set distribution's release
-status based on its version number.
+This module tells L<Dist::Zilla> to set distribution's release status based
+on its version number.
 
-There are two attributes C<testing> and C<unstable>.  Each is assigned a
-string corresponding to a test to apply to the distribution's version.
+There are two attributes: C<testing> and C<unstable>.  Each is assigned a
+string corresponding to a rule to apply to the distribution's version.
 (See L</Status rules>)
 
-If the C<unstable> rule is true, the status will be 'unstable'.
-Otherwise, if the C<testing> rule is true, the status will
-be 'testing'.  Otherwise, the status will be 'stable'.
+If the C<unstable> rule is true, the status will be 'unstable'.  Otherwise,
+if the C<testing> rule is true, the status will be 'testing'.  Otherwise,
+the status will be 'stable'.
 
 =head1 USAGE
 
@@ -176,14 +176,14 @@ decimal version.
 
 Tuple versions treat each decimal-separated value as an individual number.
 
-The only tuple rules so far check a particular tuple and return true if the
-tuple is odd:
+The only tuple rules so far check a particular element of the tuple and
+return true if the element is odd:
 
-    second_tuple_odd
-    third_tuple_odd
-    fourth_tuple_odd
+    second_element_odd
+    third_element_odd
+    fourth_element_odd
 
-For example, here is the 'second_tuple_odd' rule applied to two
+For example, here is the 'second_element_odd' rule applied to two
 version numbers:
 
     v1.0.3 — false

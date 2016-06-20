@@ -38,7 +38,7 @@ my @cases = (
         tests => [ [ '123.000001' => U ], [ '12.000002' => S ], [ '1.000003' => U ], ],
     },
     {
-        mode  => [ T, "second_tuple_odd" ],
+        mode  => [ T, "second_element_odd" ],
         tests => [
             [ 'v1.1.0'    => T ],
             [ 'v1.2.20'   => S ],
@@ -47,7 +47,7 @@ my @cases = (
         ],
     },
     {
-        mode  => [ U, "third_tuple_odd" ],
+        mode  => [ U, "third_element_odd" ],
         tests => [
             [ 'v1.1.0'    => S ],
             [ 'v1.2.21'   => U ],
@@ -56,7 +56,7 @@ my @cases = (
         ],
     },
     {
-        mode  => [ U, "fourth_tuple_odd" ],
+        mode  => [ U, "fourth_element_odd" ],
         tests => [
             [ 'v1.0.1.0'    => S ],
             [ 'v1.0.2.21'   => U ],
@@ -65,7 +65,7 @@ my @cases = (
         ],
     },
     {
-        mode  => [ U, "second_tuple_odd", T, "third_tuple_odd" ],
+        mode  => [ U, "second_element_odd", T, "third_element_odd" ],
         tests => [
             [ 'v1.0.0' => S ],
             [ 'v1.1.0' => U ],
