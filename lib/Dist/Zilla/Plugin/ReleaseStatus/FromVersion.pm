@@ -126,20 +126,21 @@ __PACKAGE__->meta->make_immutable;
 
 =head1 DESCRIPTION
 
-This module tells L<Dist::Zilla> to set distribution's release status based
+This module tells L<Dist::Zilla> to set a distribution's release status based
 on its version number.
 
 There are two attributes: C<testing> and C<unstable>.  Each is assigned a
 string corresponding to a rule to apply to the distribution's version.
 (See L</Status rules>)
 
-If the C<unstable> rule is true, the status will be 'unstable'.  Otherwise,
-if the C<testing> rule is true, the status will be 'testing'.  Otherwise,
-the status will be 'stable'.
+If the C<unstable> rule is true, the release status will be 'unstable'.
+Otherwise, if the C<testing> rule is true, the release status will be
+'testing'.  Otherwise, the release status will be 'stable'.
 
-B<NOTE>: Version numbers with underscores, whether decimal or tuple, will
-cause of fatal error.  This module B<replaces> underscore heuristics to
-determine release status and is thus incompatible with such versions.
+B<NOTE>: Use of this plugin with version numbers with underscores – whether
+decimal or tuple – will result in a fatal error.  This module B<replaces>
+underscore heuristics to determine release status and is thus incompatible
+with such versions.
 
 =head1 USAGE
 
