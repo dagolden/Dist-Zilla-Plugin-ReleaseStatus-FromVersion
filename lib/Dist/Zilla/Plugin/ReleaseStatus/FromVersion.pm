@@ -5,7 +5,7 @@ use warnings;
 package Dist::Zilla::Plugin::ReleaseStatus::FromVersion;
 # ABSTRACT: Set release status from version number patterns
 
-our $VERSION = '0.001';
+our $VERSION = '0.002';
 
 use Moose;
 use Moose::Util::TypeConstraints qw/enum/;
