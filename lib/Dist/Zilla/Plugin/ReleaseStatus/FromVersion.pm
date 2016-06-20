@@ -112,7 +112,7 @@ __PACKAGE__->meta->make_immutable;
 
 1;
 
-=for Pod::Coverage BUILD
+=for Pod::Coverage BUILD STABLE TESTING UNSTABLE provide_release_status
 
 =head1 SYNOPSIS
 
