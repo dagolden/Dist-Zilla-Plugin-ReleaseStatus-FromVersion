@@ -33,7 +33,7 @@ enum VersionMode => [ keys %RULES ];
 
 =attr testing
 
-Rule for setting status to 'testing'.  Must be one of the L</Status Rules>.
+Rule for setting status to 'testing'.  Must be one of the L</Status rules>.
 
 The default is C<none>.
 
